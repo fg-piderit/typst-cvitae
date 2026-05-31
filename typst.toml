@@ -1,0 +1,4 @@
+[package]
+name = "cvitae"
+version = "0.1.0"
+entrypoint = "cvitae.typ"
