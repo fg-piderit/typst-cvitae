@@ -24,7 +24,7 @@
   }
 
   grid(
-    columns: (5mm, 26mm),
+    columns: (5mm, 1fr),
     rows: auto,
     column-gutter: 1mm,
     row-gutter: 3pt,
@@ -47,15 +47,22 @@
   fecha: datetime.today().display("[day]/[month]/[year]"),
   doc
 ) = {
-  set page(paper: "a4", margin: 15mm)
-  set text(font: "Linux Libertine", size: 10pt)
+  set page(paper: "a4", margin: 20mm)
+  set text(font: "Linux Libertine", size: 10pt, number-type: "old-style")
+  set par(spacing: 1.3em, leading: 0.65em)
 
   let contacto = _contacto(mail, telefono, orcid, linkedin, github, direccion)
 
-  line(length: 100%)
+
+  stack(
+    dir: ttb,
+    spacing: 3pt,
+    line(length: 100%, stroke: 2pt),
+    line(length: 100%, stroke: 0.5pt)
+  )
   grid(
     columns: (2fr, 3fr),
-    rows: (41.166mm, 41.166mm),
+    rows: (41mm, 41mm),
     column-gutter: 5mm,
     row-gutter: 0mm,
     [
@@ -70,12 +77,21 @@
 
 /* Seccion ---------------------------------------------------------------- */
 #let seccion(titulo, body) = {
-  grid(
-    columns: (1fr, 4fr),
-    rows: (auto),
-    column-gutter: 0mm,
-    row-gutter: 0mm,
-    [#text(size: 14pt)[*#titulo*]], [#body]
+  stack(
+    dir: ttb,
+    spacing: 1.3em,
+    line(length: 100%, stroke: 0.5pt),
+    grid(
+      columns: (1fr, 4fr),
+      rows: (auto),
+      column-gutter: 0mm,
+      row-gutter: 0mm,
+      [
+        #set text(size: 12pt)
+        #titulo
+      ],
+      [#body]
+    )
   )
 }
 
@@ -88,8 +104,9 @@
     align: (right, left),
     [#inicio - #fin],
     [
-      #block[*#lugar*\ #puesto]
-      #block[#descripcion]
+      #smallcaps[*#lugar*]\ _ #puesto _
+      
+      #descripcion
     ]
   )
 }
@@ -109,11 +126,10 @@
     align: (right, left),
     [#inicio - #fin],
     [
-      #block[
-        *#institucion*
-        #if facultad != none [\ #facultad]
-        \ #titulo
-      ]
+      #smallcaps[*#institucion*]
+      #if facultad != none [\ _ #facultad _]
+      \ #titulo
+
       #if descripcion != none {block[#descripcion]}
     ],
   )
@@ -128,26 +144,26 @@
     align: (right, left),
     [#fecha],
     [
-      #block[*#titulo*\
-             #autores.join(", ", last: " y ")\
-             _ #lugar _]
+      *#titulo*\
+      #autores.join(", ", last: " y ")\
+      _ #lugar _
     ]
   )
 }
 
 /* Habilidades ------------------------------------------------------------ */
-#let habilidades(..habilidades) = {
+#let habilidad(titulo, nivel, descripcion: none) = {
   grid(
     columns: (1fr, 3fr),
     rows: (auto),
-    column-gutter: 5mm, [],
-    grid(
-      columns: (1fr, 1fr),
-      rows: (auto),
-      column-gutter: 5mm,
-      row-gutter: 5mm,
-      align: left,
-      ..habilidades
-    )
+    column-gutter: 5mm,
+    align: (right, left),
+    [_ #nivel _],
+    [
+      #block[
+        *#titulo*\
+        #if descripcion != none {descripcion}
+      ]
+    ]
   )
 }
